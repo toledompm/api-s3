@@ -1,0 +1,36 @@
+version: '2.1'
+services:
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4567-4599:4567-4599"
+      - 8080:3000
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/localstack
+      - PORT_WEB_UI=3000
+      - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+      - KINESIS_ERROR_PROBABILITY=${KINESIS_ERROR_PROBABILITY- }
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - $PWD/docker/volumes/localstack:/localstack"
+    networks:
+      - app-network
+
+  app:
+    image: node:10.16.0
+    container_name: application_s3_test
+    volumes:
+      - $PWD/app:/home/node/app
+    ports:
+      - 3000:3000
+    env_file: $PWD/.env
+    working_dir: /home/node/app
+    command: node src/index.js
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

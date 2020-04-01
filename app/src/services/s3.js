@@ -27,6 +27,15 @@ class S3Service {
       })
       .promise();
   }
+
+  async getObject(fileKey) {
+    return this.service
+      .getObject({
+        Bucket: this.name,
+        Key: objKey
+      })
+      .promise();
+  }
 }
 
 module.exports = S3Service;

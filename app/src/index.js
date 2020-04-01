@@ -22,4 +22,13 @@ app.post('/upload', async (req, res) => {
   }
 });
 
+app.post('/get', async (req, res) => {
+  try {
+    const { File } = await buckets.bucket1.getObject(req.body.fileKey);
+    res.json({ File });
+  } catch (error) {
+    res.status(400).json(JSON.stringify(error));
+  }
+});
+
 app.listen(3000, () => console.log('server running'));
